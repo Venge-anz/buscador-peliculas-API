@@ -1,11 +1,13 @@
 const ListOfMovies = ({ movies }) => {
   return (
-    <ul>
+    <ul className="movies">
       {movies.map((movie) => (
-        <li key={movie.id}>
-          <h3>{movie.title}</h3>
-          <p>{movie.year}</p>
+        <li className="movies" key={movie.id}>
           <img src={movie.poster} alt={movie.title}></img>
+          <div className="title-year">
+            <h3>{movie.title}</h3>
+            <p>{movie.year}</p>
+          </div>
         </li>
       ))}
     </ul>
