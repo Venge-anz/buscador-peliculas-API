@@ -3,15 +3,45 @@
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  width: 100%;
+  max-width: 800px;
 }
 
 main {
   display: flex;
   justify-content: center;
+  width: 100%;
 }
 
 form {
   align-items: center;
   display: flex;
   justify-content: center;
+}
+
+.movies {
+  list-style: none;
+  margin: 0px;
+  padding: 0px;
+  display: grid;
+
+  width: 100%;
+  gap: 20px;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+}
+
+.movies {
+  text-align: center;
+}
+
+.title-year {
+  margin: 0;
+  border: 1px solid rgba(255, 255, 255, 0.496);
+  border-radius: 10px;
+}
+
+.movies img {
+  margin-top: 20px;
+  border: 3px solid black;
+  border-radius: 10px;
 }
