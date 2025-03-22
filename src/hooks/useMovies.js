@@ -1,41 +1,33 @@
 import withResults from "../mocks/with-results.json";
-import withoutResults from "../mocks/no-results.json/";
-import { useState } from "react";
+import withoutResults from "../mocks/no-results.json";
+import { useRef, useState } from "react";
+import { searchMovies } from "../services/movies";
 
-export function useMovies({ search }) {
-  ///////////// me raya el parametro que se le pone
-  const [responseMovies, setResponseMovies] = useState([]);
-  const movies = responseMovies.Search;
+export function useMovies({ search, sort }) {
+  const [movies, setMovies] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
 
-  const mappedMovies = movies?.map((movie) => ({
-    id: movie.imdbID,
-    title: movie.Title,
-    year: movie.Year,
-    poster: movie.Poster,
-  }));
+  const previousSearch = useRef(search);
 
   const getMovies = async () => {
-    if (search) {
-      let API = await fetch(
-        `http://www.omdbapi.com/?apikey=15638813&s=${search}`
-      );
-      let res = await API.json();
-      console.log(res);
-      setResponseMovies(res);
-    } else {
-      setResponseMovies(withoutResults);
+    if (search === previousSearch.current) return;
+    try {
+      setLoading(true);
+      //Si la nueva busqueda es igual a la anterior no se renderiza
+      previousSearch.current = search;
+      const newMovies = await searchMovies({ search });
+      setMovies(newMovies);
+    } catch (e) {
+      setError(e.menssage);
+    } finally {
+      setLoading(false);
     }
   };
 
-  //   function getMovies() {
-  //     if (search) {
-  //       fetch(`http://www.omdbapi.com/?apikey=15638813&s=${search}`).then(
-  //         (response) => response.json().then((data) => setResponseMovies(data))
-  //       );
-  //     } else {
-  //       setResponseMovies(withoutResults);
-  //     }
-  //   }
+  const sortedMovies = sort
+    ? [...movies].sort((a, b) => a.title.localeCompare(b.title))
+    : movies;
 
-  return { movies: mappedMovies, getMovies };
+  return { movies: sortedMovies, getMovies, loading };
 }
